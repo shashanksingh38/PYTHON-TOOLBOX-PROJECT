@@ -1,0 +1,67 @@
+
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+# Show available columns
+
+df = pd.read_csv(r"C:\Users\rajpo\OneDrive\Desktop\projecttt.csv", encoding="ISO-8859-1")
+print(df.columns.tolist())
+
+# ---- ANALYSIS STARTS ----
+
+# Bar Plot – Top 10 Districts by Total Population
+plt.figure(figsize=(12, 6))
+top_districts_population = df.groupby("DISTRICT NAME")["NUMBER OF TOTAL POPULATION"].sum().nlargest(10)
+sns.barplot(x=top_districts_population.index, y=top_districts_population.values, palette='magma')
+plt.title("Top 10 Districts by Total Population")
+plt.xlabel("District")
+plt.ylabel("Total Population")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+# Histogram – Distribution of Total Population
+plt.figure(figsize=(10, 6))
+plt.hist(df["NUMBER OF TOTAL POPULATION"].dropna(), bins=40, color="skyblue", edgecolor="black")
+plt.title("Distribution of Total Population")
+plt.xlabel("Population")
+plt.ylabel("Frequency")
+plt.tight_layout()
+plt.show()
+
+# Scatter Plot – Population vs Number of Households
+plt.figure(figsize=(10, 6))
+plt.scatter(df["NUMBER OF TOTAL HOUSEHOLD"], df["NUMBER OF TOTAL POPULATION"], alpha=0.6, color='green')
+plt.title("Population vs. Total Households")
+plt.xlabel("Total Households")
+plt.ylabel("Total Population")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Bar Plot – Districts with Highest Number of Schools (Proxy: Availability of Primary + Middle + High Schools)
+df["TOTAL SCHOOLS (Primary+Middle+High)"] = (
+    df["AVAILABILITY OF PRIMARY SCHOOL"].fillna(0).astype(int) +
+    df["AVAILABILITY OF MIDDLE SCHOOL"].fillna(0).astype(int) +
+    df["AVAILABILITY OF HIGH SCHOOL"].fillna(0).astype(int)
+)
+
+top_school_districts = df.groupby("DISTRICT NAME")["TOTAL SCHOOLS (Primary+Middle+High)"].sum().nlargest(10)
+plt.figure(figsize=(12, 6))
+sns.barplot(x=top_school_districts.index, y=top_school_districts.values, palette="coolwarm")
+plt.title("Top 10 Districts by School Availability")
+plt.xlabel("District")
+plt.ylabel("Total Schools (Primary+Middle+High)")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+# Histogram with KDE – Number of Children Not Attending School
+plt.figure(figsize=(10, 6))
+sns.histplot(df["NUMBER OF CHILDREN NOT ATTENDING THE SCHOOL"].dropna(), bins=30, kde=True, color="purple")
+plt.title("Distribution of Children Not Attending School")
+plt.xlabel("Number of Children")
+plt.ylabel("Frequency")
+plt.tight_layout()
+plt.show()
