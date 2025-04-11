@@ -1,0 +1,63 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+df = pd.read_csv(r"C:\Users\rajpo\OneDrive\Desktop\projecttt.csv", encoding="ISO-8859-1")
+
+# 🔍 Dataset Overview
+print("📌 First 5 rows of dataset:")
+print(df.head())
+
+print("\n📌 Dataset shape (rows, columns):", df.shape)
+
+# 🎯 List all columns
+print("\n📌 Column names:")
+print(df.columns.tolist())
+
+# ✅ Count of villages per district
+print("\n📌 Number of villages per district:")
+print(df["DISTRICT NAME"].value_counts().head(10))
+
+# 📍 Plotting village locations (if LAT/LONG exists)
+plt.figure(figsize=(10, 6))
+plt.scatter(df["VILLAGE LONGITUDE"], df["VILLAGE LATITUDE"], alpha=0.5, s=10, color='green')
+plt.title("📍 Village Locations in Bihar")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.tight_layout()
+plt.show()
+
+# 📊 Distribution of total population
+plt.figure(figsize=(9, 6))
+sns.histplot(df["NUMBER OF TOTAL POPULATION"], bins=30, color='skyblue', kde=True)
+plt.title("Population Distribution Across Villages")
+plt.xlabel("Total Population")
+plt.ylabel("Number of Villages")
+plt.grid(True, linestyle='--', alpha=0.5)
+plt.tight_layout()
+plt.show()
+
+# 📦 Boxplot for household count (detect outliers)
+plt.figure(figsize=(8, 5))
+sns.boxplot(x=df["NUMBER OF TOTAL HOUSEHOLD"], color='lightcoral')
+plt.title("Boxplot of Total Households")
+plt.xlabel("Number of Households")
+plt.grid(True, axis='x', linestyle='--', alpha=0.5)
+plt.tight_layout()
+plt.show()
+
+# 💡 Count of villages with electricity
+print("\n📌 Villages with electricity for domestic use:")
+print(df["AVAILABILITY OF ELECTRICITY FOR DOMESTIC USE"].value_counts())
+
+# 📊 Count plot for electricity access
+plt.figure(figsize=(6, 4))
+sns.countplot(x="AVAILABILITY OF ELECTRICITY FOR DOMESTIC USE", data=df, palette="Set2")
+plt.title("Electricity Availability in Villages")
+plt.xlabel("Electricity Available?")
+plt.ylabel("Number of Villages")
+plt.grid(axis='y', linestyle='--', alpha=0.5)
+plt.tight_layout()
+plt.show()
