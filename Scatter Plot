@@ -1,0 +1,9 @@
+# Scatter Plot – Population vs Number of Households
+plt.figure(figsize=(10, 6))
+plt.scatter(df["NUMBER OF TOTAL HOUSEHOLD"], df["NUMBER OF TOTAL POPULATION"], alpha=0.6, color='YELLO')
+plt.title("Population vs. Total Households")
+plt.xlabel("Total Households")
+plt.ylabel("Total Population")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
