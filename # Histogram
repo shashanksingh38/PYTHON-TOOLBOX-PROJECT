@@ -1,0 +1,8 @@
+# Histogram – Distribution of Total Population
+plt.figure(figsize=(10, 6))
+plt.hist(df["NUMBER OF TOTAL POPULATION"].dropna(), bins=40, color="skyblue", edgecolor="RED")
+plt.title("Distribution of Total Population")
+plt.xlabel("Population")
+plt.ylabel("Frequency")
+plt.tight_layout()
+plt.show()
