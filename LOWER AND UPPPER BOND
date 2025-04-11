@@ -1,0 +1,79 @@
+
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+# Show available columns
+
+df = pd.read_csv(r"C:\Users\rajpo\OneDrive\Desktop\projecttt.csv", encoding="ISO-8859-1")
+
+print(df.columns.tolist())
+
+
+target_col = "NUMBER OF FARMERS RECEIVED THE SOIL TESTING REPORT"
+
+# Calculate Q1 and Q3
+q1 = df[target_col].quantile(0.25)
+q3 = df[target_col].quantile(0.75)
+
+# Calculate IQR
+IQR = q3 - q1
+print("IQR:", IQR)
+
+# Calculate lower and upper bounds for outliers
+lower_bound = q1 - 1.5 * IQR
+upper_bound = q3 + 1.5 * IQR
+
+# Identify outliers
+outliers = df[(df[target_col] < lower_bound) | (df[target_col] > upper_bound)]
+print("Outliers:\n", outliers[[target_col]])
+
+# Boxplot with outliers
+plt.figure(figsize=(8, 5))
+sns.boxplot(x=df[target_col])
+plt.title(f"Boxplot of {target_col} with Outliers")
+plt.xlabel(target_col)
+plt.show()
+
+# Remove outliers
+df_clean = df[(df[target_col] >= lower_bound) & (df[target_col] <= upper_bound)]
+
+# Boxplot after removing outliers
+plt.figure(figsize=(8, 5))
+sns.boxplot(x=df_clean[target_col])
+plt.title(f"{target_col} After Removing Outliers")
+plt.xlabel(target_col)
+plt.show()
+
+# Scatter plot highlighting outliers
+plt.figure(figsize=(10, 6))
+plt.scatter(df.index, df[target_col], color='lightblue', label='Normal Data')
+plt.scatter(outliers.index, outliers[target_col], color='red', label='Outliers')
+plt.title(f"Scatter Plot Highlighting Outliers in {target_col}")
+plt.xlabel("Index")
+plt.ylabel(target_col)
+plt.legend()
+plt.show()
+
+# Correlation Heatmap
+correlation = df.select_dtypes(include=[np.number]).corr()
+plt.figure(figsize=(10, 7))
+sns.heatmap(correlation, annot=True, cmap='coolwarm', linewidths=0.5)
+plt.title("Correlation Heatmap of Numerical Features")
+plt.show()
+
+# Simulated time-series data (if no actual time column)
+np.random.seed(42)
+df_time = df.copy()
+df_time['Time'] = pd.date_range(start='2020-01-01', periods=len(df_time), freq='D')
+
+# Line plot for the target column over time
+plt.figure(figsize=(10, 5))
+plt.plot(df_time['Time'], df_time[target_col], label=target_col, color='blue')
+plt.title(f"Line Chart of {target_col} over Time")
+plt.xlabel("Time")
+plt.ylabel(target_col)
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
